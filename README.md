@@ -37,6 +37,10 @@ focus = {
 Multi-tenant RAG service with isolated semantic retrieval and memory management.  
 ⭐ Recognized by LightRAG author
 
+### [DeepSeek-OCR-SDK](https://github.com/bukely/DeepSeek-OCR-SDK)
+Python SDK for DeepSeek OCR API with intelligent fallback and batch processing.  
+📦 Published on PyPI
+
 ### Contributions
 - **[LightRAG](https://github.com/HKUDS/LightRAG)** · Multi-tenant concurrency optimization, 3x performance improvement · [#2353](https://github.com/HKUDS/LightRAG/pull/2353) ✓
 - **[MineContext](https://github.com/bytedance/MineContext)** · Windows platform critical bug fix · [#214](https://github.com/bytedance/MineContext/pull/214) ✓
