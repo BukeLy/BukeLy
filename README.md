@@ -53,24 +53,68 @@ class AIEngineer:
 
 ---
 
-## 🎯 Featured Projects
+## 🎯 Open Source Work
 
-### 🔥 [rag-api](https://github.com/bukely/rag-api)
-> Multi-tenant RAG core service providing isolated semantic retrieval and memory for AI Agents
-- 🏗️ **Tech**: Python, LightRAG, Vector Database
-- ⭐ **Recognized** by LightRAG author
-- 🚀 **Features**: Tenant-level namespace locking, high concurrency support
+### 🔥 Featured Project
 
-### 🤖 [tg-bot-ai](https://github.com/bukely/tg-bot-ai) 
-> Agent-based automation system for intelligent ticket management
-- 🎯 **Achievement**: 100% automation coverage
-- 🔧 **Tech**: LangChain, Telegram Bot API, LLM Agent
-- 💡 **Use Case**: End-to-end workflow automation
+#### [rag-api](https://github.com/bukely/rag-api)
+> Multi-tenant RAG core service providing isolated semantic retrieval and memory capabilities for AI Agents
 
-### 🔬 Open Source Contributions
-- **[LightRAG](https://github.com/HKUDS/LightRAG)** - Multi-tenant performance optimization ([PR#2353](https://github.com/HKUDS/LightRAG/pull/2353)) ✅ Merged
-  - 🚀 3x performance improvement in multi-tenant scenarios
-- **[MineContext](https://github.com/bytedance/MineContext)** - Windows platform crash fix ([PR#214](https://github.com/bytedance/MineContext/pull/214)) ✅ Merged
+**Why this matters:**
+- 🏗️ Solves the critical challenge of tenant isolation in multi-tenant RAG systems
+- 🔒 Implements tenant-level namespace locking for true concurrent processing
+- ⚡ Enables high-performance semantic search across isolated workspaces
+- 🎯 Production-ready architecture for building scalable AI SaaS platforms
+
+**Tech Stack:** Python, LightRAG, Vector Database, Redis
+
+**Recognition:** ⭐ Starred by LightRAG author
+
+---
+
+### 🤝 Open Source Contributions
+
+#### [LightRAG](https://github.com/HKUDS/LightRAG) - Multi-tenant Performance Optimization
+**PR [#2353](https://github.com/HKUDS/LightRAG/pull/2353)** ✅ Merged
+
+**Problem Solved:**
+- Identified global lock bottleneck causing serialized processing in multi-tenant scenarios
+- All tenants were blocked by a single `pipeline_status` global lock
+
+**Solution:**
+- Refactored global lock to tenant-level namespace locks (`{workspace}:pipeline`)
+- Enabled true concurrent processing across tenants
+
+**Impact:**
+- 🚀 **3x performance improvement** in 3-tenant scenarios
+- 📈 Theoretical **Nx improvement** for N tenants
+- 🔓 Unlocked true multi-tenant scalability
+
+**Technical Details:**
+```python
+# Before: Global lock (serialized)
+lock = redis_client.lock("pipeline_status")
+
+# After: Tenant-namespaced lock (parallelized)  
+lock = redis_client.lock(f"{workspace}:pipeline_status")
+```
+
+---
+
+#### [MineContext](https://github.com/bytedance/MineContext) - Windows Platform Fix
+**PR [#214](https://github.com/bytedance/MineContext/pull/214)** ✅ Merged
+
+**Problem Solved:**
+- Application crashed on startup for all Windows users (critical bug)
+- Root cause: Missing C extensions (`_ssl`, `_hashlib`) in PyInstaller build
+
+**Solution:**
+- Modified `.spec` file to explicitly include Windows-specific C extensions
+- Fixed OPENSSL_Applink error through proper hiddenimports configuration
+
+**Impact:**
+- 🎯 Fixed critical bug affecting **100% of Windows users**
+- 💡 Enabled cross-platform compatibility for 1K+ starred project
 
 ---
 
@@ -88,14 +132,14 @@ class AIEngineer:
 
 ---
 
-## 🏆 Highlights
+## 🏆 Technical Highlights
 
 ```diff
-+ 🔥 Built multi-tenant AI SaaS platform from 0 to 1
-+ ⚡ Optimized LightRAG framework for 3x performance boost
-+ 🌟 Contributed to multiple open-source AI/ML projects
-+ 📈 98% automation coverage in production systems
-+ 🚀 RAG query response time < 2 seconds
++ 🔥 Built production-grade multi-tenant AI SaaS platform
++ ⚡ Optimized LightRAG framework: 3x performance boost in multi-tenant scenarios
++ 🌟 Active contributor to AI/ML open-source ecosystem
++ 🎯 Deep expertise in RAG architecture and Agent workflows
++ 🚀 Proven track record of solving complex distributed systems challenges
 ```
 
 ---
@@ -108,19 +152,30 @@ const currentGoals = {
     "Advanced RAG optimization techniques",
     "Multi-modal AI applications", 
     "LLM fine-tuning & optimization",
-    "Agent orchestration frameworks"
+    "Agent orchestration frameworks",
+    "Transformer architecture deep dive"
   ],
   building: [
     "Scalable multi-tenant RAG systems",
-    "Intelligent automation tools",
+    "Intelligent automation platforms",
     "Open-source AI utilities"
   ],
   contributing: [
-    "LightRAG ecosystem",
-    "AI/ML open-source community"
+    "LightRAG ecosystem enhancements",
+    "AI/ML community-driven projects"
   ]
 }
 ```
+
+---
+
+## 📈 Areas of Expertise
+
+- **RAG Systems**: Multi-tenant architecture, vector search optimization, hybrid retrieval
+- **AI Agents**: Workflow orchestration, function calling, memory management
+- **Cloud Architecture**: AWS Serverless (Lambda, DynamoDB, Amplify)
+- **Performance Engineering**: Distributed locking, concurrency optimization
+- **Problem Solving**: Root cause analysis, system debugging, cross-platform issues
 
 ---
 
