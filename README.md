@@ -41,7 +41,7 @@ Multi-tenant RAG service with isolated semantic retrieval and memory management.
 Python SDK for DeepSeek OCR API with intelligent fallback and batch processing.  
 📦 Published on PyPI
 
-###[Pageindex](https://github.com/VectifyAI/PageIndex)
+### [Pageindex](https://github.com/VectifyAI/PageIndex)
 As a member of VectifyAI contributing to Pageindex
 ---
 
