@@ -2,7 +2,7 @@
 
 # Hi, I'm Bukely 👋
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=22&duration=3000&pause=1000&color=58A6FF&center=true&vCenter=true&random=false&width=500&lines=AI+Engineer;RAG+Architect;Open+Source+Contributor)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=22&duration=3000&pause=1000&color=58A6FF&center=true&vCenter=true&random=false&width=500&lines=AI+Engineer;RAG+Architect;Serverless+AI+Agent+Builder;MCP+Developer;Open+Source+Contributor)](https://git.io/typing-svg)
 
 </div>
 
@@ -15,9 +15,9 @@ Passionate about performance optimization and open-source contributions.
 
 ```python
 focus = {
-    "current": "Multi-tenant AI SaaS with RAG + Agent",
+    "current": "Serverless AI Agent · MCP · RAG Architecture",
     "exploring": "LLM optimization, Multi-modal AI",
-    "stack": ["Python", "LangChain", "AWS Serverless"]
+    "stack": ["Python", "Claude Agent SDK", "AWS Serverless", "MCP"]
 }
 ```
 
@@ -25,17 +25,25 @@ focus = {
 
 ## 🛠️ Tech Stack
 
-**AI/ML** &nbsp; Python · LangChain · LightRAG · OpenAI · Vector Databases  
-**Cloud** &nbsp; AWS Lambda · DynamoDB · Amplify  
-**Tools** &nbsp; Git · Docker · Cursor
+**AI/ML** &nbsp; Python · LangChain · LightRAG · OpenAI · Claude Agent SDK · Vector Databases  
+**Cloud** &nbsp; AWS Lambda · DynamoDB · Bedrock · SAM · Amplify  
+**Tools** &nbsp; Git · Docker · MCP · Cursor
 
 ---
 
 ## 💼 Open Source
 
 ### [rag-api](https://github.com/bukely/rag-api)
-Multi-tenant RAG service with isolated semantic retrieval and memory management.  
-⭐ Recognized by LightRAG author
+Multi-tenant RAG API powered by LightRAG/RAG-Anything — auto-selects best parser (DeepSeek-OCR/MinerU/Docling) via complexity scoring.  
+⭐ 47 stars · Recognized by LightRAG author
+
+### [Stateless-FileSystem-Agent](https://github.com/BukeLy/Stateless-FileSystem-Agent)
+Serverless AI Agent built on Claude Agent SDK with stateful session persistence via S3+DynamoDB.  
+🤖 Telegram bot with MCP integration and SQS FIFO async architecture
+
+### [pageindex-light-mcp](https://github.com/BukeLy/pageindex-light-mcp)
+Lightweight Agentic PDF Search via MCP — Vectorless, reasoning-based document retrieval.  
+🔍 Inspired by VectifyAI/PageIndex · Native MCP Sampling support
 
 ### [DeepSeek-OCR-SDK](https://github.com/bukely/DeepSeek-OCR-SDK)
 Python SDK for DeepSeek OCR API with intelligent fallback and batch processing.  
@@ -43,6 +51,7 @@ Python SDK for DeepSeek OCR API with intelligent fallback and batch processing.
 
 ### [Pageindex](https://github.com/VectifyAI/PageIndex)
 As a member of VectifyAI contributing to Pageindex
+
 ---
 
 ## 📊 GitHub Stats
