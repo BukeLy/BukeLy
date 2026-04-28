@@ -34,8 +34,8 @@ focus = {
 ## 💼 Open Source
 
 ### [rag-api](https://github.com/bukely/rag-api)
-Multi-tenant RAG API powered by LightRAG/RAG-Anything — auto-selects best parser (DeepSeek-OCR/MinerU/Docling) via complexity scoring.  
-⭐ 47 stars · Recognized by LightRAG author
+[DEPRECATED]Multi-tenant RAG API powered by LightRAG/RAG-Anything — auto-selects best parser (DeepSeek-OCR/MinerU/Docling) via complexity scoring.  
+
 
 ### [Stateless-FileSystem-Agent](https://github.com/BukeLy/Stateless-FileSystem-Agent)
 Serverless AI Agent built on Claude Agent SDK with stateful session persistence via S3+DynamoDB.  
