@@ -3,7 +3,7 @@
 # Hi, I'm Bukely
 
 <a href="https://git.io/typing-svg">
-  <img alt="Typing SVG" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=22&duration=3000&pause=1000&color=0969DA&center=true&vCenter=true&random=false&width=560&lines=AI+Engineer;RAG+Architect;Serverless+AI+Agent+Builder;MCP+Developer;Open+Source+Contributor" />
+  <img height="28" alt="Typing SVG" src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=3000&pause=1000&color=0969DA&center=true&vCenter=true&random=false&width=460&height=28&lines=AI+Engineer;RAG+Architect;Serverless+AI+Agent+Builder;MCP+Developer;Open+Source+Contributor" />
 </a>
 
 Building production RAG systems, document intelligence, and agentic developer tools.
@@ -22,28 +22,39 @@ Building production RAG systems, document intelligence, and agentic developer to
 
 ## Focus
 
-<table width="100%">
-  <tr>
-    <td width="33%" valign="top">
-      <strong>Production Systems</strong><br />
-      PageIndex compute pipeline<br />
-      Multi-tenant AI APIs<br />
-      Reliability and observability
-    </td>
-    <td width="33%" valign="top">
-      <strong>RAG and Document AI</strong><br />
-      Reasoning-based retrieval<br />
-      Parser and OCR orchestration<br />
-      Long-document indexing
-    </td>
-    <td width="33%" valign="top">
-      <strong>Open Source and Agents</strong><br />
-      LightRAG contributions<br />
-      MCP-native tools<br />
-      Serverless agent workflows
-    </td>
-  </tr>
-</table>
+**Production systems:** PageIndex compute pipeline, multi-tenant AI APIs, reliability, and observability.  
+**RAG and document AI:** reasoning-based retrieval, parser/OCR orchestration, and long-document indexing.  
+**Open source and agents:** LightRAG contributions, MCP-native tools, and serverless agent workflows.
+
+## Featured Repository
+
+<div align="center">
+  <a href="https://github.com/VectifyAI/PageIndex">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=github_dark&cache_seconds=21600" />
+      <img alt="PageIndex" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=default&cache_seconds=21600" />
+    </picture>
+  </a>
+  <a href="https://github.com/HKUDS/LightRAG">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=github_dark&cache_seconds=21600" />
+      <img alt="LightRAG" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=default&cache_seconds=21600" />
+    </picture>
+  </a>
+  <br />
+  <a href="https://github.com/bukely/rag-api">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=github_dark&cache_seconds=21600" />
+      <img alt="rag-api" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=default&cache_seconds=21600" />
+    </picture>
+  </a>
+  <a href="https://github.com/BukeLy/Stateless-FileSystem-Agent">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=github_dark&cache_seconds=21600" />
+      <img alt="Stateless-FileSystem-Agent" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=default&cache_seconds=21600" />
+    </picture>
+  </a>
+</div>
 
 ## GitHub Activity
 
@@ -64,39 +75,9 @@ Building production RAG systems, document intelligence, and agentic developer to
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&cache_seconds=43200&v=20260509-private-sources" />
-    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&cache_seconds=43200&v=20260509-private-sources" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
+    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
   </picture>
-</div>
-
-## Featured Repository
-
-<div align="center">
-  <a href="https://github.com/VectifyAI/PageIndex">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=github_dark&hide_border=true&cache_seconds=21600" />
-      <img alt="PageIndex" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=default&hide_border=true&cache_seconds=21600" />
-    </picture>
-  </a>
-  <a href="https://github.com/HKUDS/LightRAG">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=github_dark&hide_border=true&cache_seconds=21600" />
-      <img alt="LightRAG" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=default&hide_border=true&cache_seconds=21600" />
-    </picture>
-  </a>
-  <br />
-  <a href="https://github.com/bukely/rag-api">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=github_dark&hide_border=true&cache_seconds=21600" />
-      <img alt="rag-api" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=default&hide_border=true&cache_seconds=21600" />
-    </picture>
-  </a>
-  <a href="https://github.com/BukeLy/Stateless-FileSystem-Agent">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=github_dark&hide_border=true&cache_seconds=21600" />
-      <img alt="Stateless-FileSystem-Agent" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=default&hide_border=true&cache_seconds=21600" />
-    </picture>
-  </a>
 </div>
 
 ---
