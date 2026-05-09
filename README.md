@@ -64,8 +64,8 @@ Building production RAG systems, document intelligence, and agentic developer to
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&cache_seconds=43200" />
-    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&cache_seconds=43200" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&cache_seconds=43200&v=20260509-private-sources" />
+    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&cache_seconds=43200&v=20260509-private-sources" />
   </picture>
 </div>
 
