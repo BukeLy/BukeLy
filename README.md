@@ -14,6 +14,7 @@ Building production RAG systems, document intelligence, and agentic developer to
   <img alt="RAG" src="https://img.shields.io/badge/RAG-0E8A16?style=flat" />
   <img alt="MCP" src="https://img.shields.io/badge/MCP-0969DA?style=flat" />
   <img alt="Open Source" src="https://img.shields.io/badge/Open%20Source-6F42C1?style=flat" />
+  <a href="https://ghfind.com/u/bukely?ref=badge"><img src="https://ghfind.com/api/badge/bukely" alt="GitHub Roast 评分徽章" /></a>
 </p>
 
 </div>
