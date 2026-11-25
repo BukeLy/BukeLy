@@ -13,9 +13,8 @@
 <canvas id="out"></canvas>
 <script type="module">
   import * as THREE from "three";
-  import { theme, W, loadFonts, layer, text, rect, dotted, desk, win, sprite, line, bayer, bits, paint } from "./bit.js";
+  import { theme, W, MOBILE, loadFonts, layer, text, wrap, rect, dotted, desk, win, sprite, line, bayer, bits, paint } from "./bit.js";
 
-  const H = 404;
   const TAU = Math.PI * 2;
   const data = await (await fetch("data.json", { cache: "no-store" })).json();
   await loadFonts();
@@ -25,26 +24,41 @@
   const monthYear = (d) => `${MONTHS[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}`;
   const CUBE = ["....###....", "..##...##..", "##.......##", "#.##...##.#", "#...###...#", "#....#....#", "#....#....#", "#....#....#", "##...#...##", "..##.#.##..", "....###...."];
 
-  // ---- Back layer: menu bar, desktop, and the skyline window's frame. ----
+  // ---- Front window ("About") content, measured first so the layout can size around it. ----
+  const probe = layer(10, 10).g;
+  const A_W = MOBILE ? W - 17 : 372;
+  const tagline = wrap(probe, "production RAG systems, document intelligence, agentic developer tools.", 22, A_W - 34);
+  const stats = [
+    [fmt(data.total), "contributions"],
+    [`${data.longestStreak} days`, "longest streak"],
+    [data.busiest.label.replace("’", "'"), `busiest month, ${fmt(data.busiest.count)}`],
+  ];
+  const tagY = 142, statsY = tagY + tagline.length * 24 + 20;
+  const A_BOX = { x: MOBILE ? 8 : 16, y: MOBILE ? 32 : 34, w: A_W, h: 19 + statsY + 2 * 28 + 16 };
+  const B_BOX = MOBILE
+    ? { x: 8, y: A_BOX.y + A_BOX.h + 14, w: W - 17, h: 236 }
+    : { x: 372, y: 50, w: 458, h: 340 };
+  const H = Math.max(A_BOX.y + A_BOX.h, B_BOX.y + B_BOX.h) + 14;
+
+  // ---- Back layer: menu bar, desktop, and the skyline window. ----
   const back = layer(W, H);
   let g = back.g;
   desk(g, 0, 20, W, H - 20);
   rect(g, 0, 19, W, 1);
   sprite(g, CUBE, 10, 4);
   text(g, "Bukely", 30, 14, 11, { bold: true });
-  ["File", "Edit", "View"].forEach((s, i) => text(g, s, 92 + i * 50, 14));
+  if (!MOBILE) ["File", "Edit", "View"].forEach((s, i) => text(g, s, 92 + i * 50, 14));
   text(g, data.updated, W - 10, 14, 11, { align: "right" });
 
-  const B = win(g, 372, 50, 458, 340, "contributions — last 365 days", { active: false });
+  const B = win(g, B_BOX.x, B_BOX.y, B_BOX.w, B_BOX.h, MOBILE ? "contributions" : "contributions — last 365 days", { active: false });
   const first = data.weeks[0][0].date, last = data.weeks.at(-1).at(-1).date;
-  text(g, "one block per day", B.x + 26, B.y + 15);
+  text(g, MOBILE ? "last 365 days" : "one block per day", B.x + (MOBILE ? 10 : 26), B.y + 15);
   text(g, `${monthYear(first)} – ${monthYear(last)}`, B.x + B.w - 10, B.y + 15, 11, { align: "right" });
   rect(g, B.x, B.y + 21, B.w, 1);
   const STAGE = { x: B.x, y: B.y + 22, w: B.w, h: B.h - 22 };
   const backBits = bits(back);
 
-  // ---- Front layer: the active "About" window, which overlaps the skyline window. ----
-  const A_BOX = { x: 16, y: 34, w: 372, h: 330 };
+  // ---- Front layer: the active "About" window. ----
   const front = layer(W, H);
   g = front.g;
   const A = win(g, A_BOX.x, A_BOX.y, A_BOX.w, A_BOX.h, "About Bukely");
@@ -53,22 +67,16 @@
   text(g, "AI engineer", ax, A.y + 80, 22);
   dotted(g, A.x + 8, A.y + 96, A.w - 16);
   text(g, "Building", ax, A.y + 116);
-  const lines = ["production RAG systems,", "document intelligence,", "agentic developer tools."];
-  lines.forEach((s, i) => text(g, s, ax, A.y + 142 + i * 24, 22));
-  dotted(g, A.x + 8, A.y + 210, A.w - 16);
-  const stats = [
-    [fmt(data.total), "contributions"],
-    [`${data.longestStreak} days`, "longest streak"],
-    [data.busiest.label.replace("’", "'"), `busiest month, ${fmt(data.busiest.count)}`],
-  ];
+  tagline.forEach((s, i) => text(g, s, ax, A.y + tagY + i * 24, 22));
+  dotted(g, A.x + 8, A.y + statsY - 28, A.w - 16);
   stats.forEach(([n, label], i) => {
-    const y = A.y + 240 + i * 28;
+    const y = A.y + statsY + i * 28;
     const nw = text(g, n, ax, y, 22);
     text(g, label, ax + nw + 10, y);
   });
   const frontBits = bits(front);
-  g.font = "22px 'Departure Mono'";
-  const caret = { x: ax + Math.ceil(g.measureText(lines[2]).width) + 3, y: A.y + 142 + 2 * 24 - 16, w: 11, h: 19 };
+  probe.font = "22px 'Departure Mono'";
+  const caret = { x: ax + Math.ceil(probe.measureText(tagline.at(-1)).width) + 3, y: A.y + tagY + (tagline.length - 1) * 24 - 16, w: 11, h: 19 };
 
   // ---- The skyline: rendered small with flat light, then dithered to bits. ----
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, preserveDrawingBuffer: true });
@@ -110,7 +118,10 @@
 
   const best = days.find((d) => d.date === data.bestDay.date);
   const bestTop = new THREE.Vector3(X(best.wi), 0.2 + height(best.count), Z(best.weekday));
-  const monthAnchors = data.months.map((mo) => ({ label: mo.label, p: new THREE.Vector3(X(mo.week) + 0.5, 0, 5.4) }));
+  // Phones have room for every other month only.
+  const monthAnchors = data.months
+    .filter((_, i) => !MOBILE || i % 2 === 0)
+    .map((mo) => ({ label: mo.label, p: new THREE.Vector3(X(mo.week) + 0.5, 0, 5.4) }));
 
   const scratch = layer(STAGE.w, STAGE.h);
   const over = layer(W, H);
@@ -119,21 +130,23 @@
     return [STAGE.x + ((p.x + 1) / 2) * STAGE.w, STAGE.y + ((1 - p.y) / 2) * STAGE.h];
   };
   const inStage = (x, y) => x >= STAGE.x && x < STAGE.x + STAGE.w && y >= STAGE.y && y < STAGE.y + STAGE.h;
-  const underA = (x, y) => x >= A_BOX.x && x <= A_BOX.x + A_BOX.w && y >= A_BOX.y && y <= A_BOX.y + A_BOX.h;
+  // `aim` shifts the skyline right on desktop so its left end clears the About window.
+  const CAM = MOBILE ? { r: 92, h: 60, look: 3.2, aim: 0 } : { r: 100, h: 54, look: 4.4, aim: -2.5 };
 
   const out = document.getElementById("out");
   /** Draw loop phase t in [0, 1); the loop is seamless at t = 1. */
   window.__frame = (t) => {
     // A slow sway; seamless because it is a full sine period.
-    const a = -0.42 + 0.12 * Math.sin(TAU * t);
-    camera.position.set(Math.sin(a) * 150, 64, Math.cos(a) * 150);
-    camera.lookAt(0, 2.6, 0);
+    const a = -0.5 + 0.12 * Math.sin(TAU * t);
+    camera.position.set(Math.sin(a) * CAM.r, CAM.h, Math.cos(a) * CAM.r);
+    camera.lookAt(CAM.aim, CAM.look, 0);
     renderer.render(scene, camera);
 
     scratch.g.clearRect(0, 0, STAGE.w, STAGE.h);
     scratch.g.drawImage(renderer.domElement, 0, 0);
     const px = scratch.g.getImageData(0, 0, STAGE.w, STAGE.h).data;
     const f = backBits.slice();
+    const lift = theme === "dark" && !MOBILE;
     for (let y = 0; y < STAGE.h; y++)
       for (let x = 0; x < STAGE.w; x++) {
         const i = (y * STAGE.w + x) * 4;
@@ -141,8 +154,8 @@
         const r = px[i] / 255, gg = px[i + 1] / 255, b = px[i + 2] / 255;
         const edge = r > 0.8 && gg < 0.2 && b < 0.2;
         const lum = 0.299 * r + 0.587 * gg + 0.114 * b;
-        // Light theme inks the shadows; dark theme inks the lit faces (lifted, or the fronts vanish).
-        if (edge || (theme === "dark" ? lum ** 0.6 : 1 - lum) > bayer(x, y)) f[(STAGE.y + y) * W + STAGE.x + x] = 1;
+        // Black ink inks the shadows; light ink (dark theme) inks the lit faces, lifted so fronts stay visible.
+        if (edge || (lift ? lum ** 0.6 : 1 - lum) > bayer(x, y)) f[(STAGE.y + y) * W + STAGE.x + x] = 1;
       }
 
     // Overlays that follow the model: month ticks and the best-day callout.
@@ -152,10 +165,10 @@
       text(over.g, label, x, y + 12, 11, { align: "center" });
     });
     const [bx, by] = project(bestTop);
-    const label = `best day: ${shortDate(best.date)}, ${fmt(best.count)}`;
+    const label = MOBILE ? `best: ${shortDate(best.date)}, ${fmt(best.count)}` : `best day: ${shortDate(best.date)}, ${fmt(best.count)}`;
     over.g.font = "11px 'Departure Mono'";
     const lw = Math.ceil(over.g.measureText(label).width) + 12;
-    const lx = Math.round(bx - 30), ly = STAGE.y + 18;
+    const lx = Math.round(bx - 24), ly = STAGE.y + 18;
     line(over.g, bx, by - 3, bx, ly);
     line(over.g, bx, ly, lx, ly);
     // The label box is opaque: clear under it, then frame it.
@@ -165,7 +178,7 @@
     const ob = bits(over);
     for (let i = 0; i < ob.length; i++) if (ob[i] && inStage(i % W, (i / W) | 0)) f[i] = 1;
 
-    // The front window covers everything under it; its caret blinks twice a second.
+    // The front window covers whatever is under it; its caret blinks twice a second.
     for (let y = A_BOX.y; y <= A_BOX.y + A_BOX.h; y++)
       for (let x = A_BOX.x; x <= A_BOX.x + A_BOX.w; x++) f[y * W + x] = frontBits[y * W + x];
     if ((t * 16) % 2 < 1) for (let y = caret.y; y < caret.y + caret.h; y++) for (let x = caret.x; x < caret.x + caret.w; x++) f[y * W + x] = 1;

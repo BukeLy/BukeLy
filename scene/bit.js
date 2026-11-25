@@ -3,15 +3,19 @@
 // out at SCALE× with crisp pixels. Paper is transparent so the images sit on
 // GitHub's light or dark page.
 //
-// GitHub's profile README column is 846 CSS px wide, so images are W = 846
-// logical px, written at 2× (1692 px) and shown with width="846": one logical
-// pixel is one CSS pixel, so nothing is ever resampled at 1x or 2x.
+// GitHub's profile README column is 846 CSS px wide on desktop, so images are
+// W = 846 logical px, written at 2× (1692 px) and shown with width="846": one
+// logical pixel is one CSS pixel, so nothing is resampled at 1x or 2x.
+// `?w=320` lays out the phone version (column ~308 px), written at 3×. Phone
+// images are opaque black on white: GitHub's <themed-picture> rewrites any
+// media query that mentions the colour scheme, so width and theme can't combine.
 
 const params = new URLSearchParams(location.search);
 export const theme = params.get("theme") === "dark" ? "dark" : "light";
-export const W = 846;
-export const SCALE = 2;
-export const INK = theme === "dark" ? "#f0f6fc" : "#000000";
+export const W = Number(params.get("w")) || 846;
+export const MOBILE = W < 600;
+export const SCALE = MOBILE ? 3 : 2;
+export const INK = theme === "dark" && !MOBILE ? "#f0f6fc" : "#000000";
 // Departure Mono (SIL OFL, scene/fonts) is pixel-exact at multiples of 11 px.
 const FAMILY = '"Departure Mono"';
 
@@ -43,14 +47,17 @@ export function text(g, str, x, y, size = 11, { align = "left", erase = false, b
   return width;
 }
 
-/** Greedy word wrap to a pixel width. */
+/** Greedy word wrap to a pixel width. Words too wide for a line may also break after "/". */
 export function wrap(g, str, size, width) {
   g.font = `${size}px ${FAMILY}`;
   const lines = [""];
   for (const word of str.split(" ")) {
-    const next = lines.at(-1) ? `${lines.at(-1)} ${word}` : word;
-    if (g.measureText(next).width > width && lines.at(-1)) lines.push(word);
-    else lines[lines.length - 1] = next;
+    const parts = g.measureText(word).width > width ? word.split(/(?<=\/)/) : [word];
+    parts.forEach((part, k) => {
+      const next = lines.at(-1) ? `${lines.at(-1)}${k ? "" : " "}${part}` : part;
+      if (g.measureText(next).width > width && lines.at(-1)) lines.push(part);
+      else lines[lines.length - 1] = next;
+    });
   }
   return lines;
 }
@@ -130,6 +137,10 @@ export function paint(canvas, b, w, h) {
   canvas.height = h * SCALE;
   const g = canvas.getContext("2d");
   g.clearRect(0, 0, canvas.width, canvas.height);
+  if (MOBILE) {
+    g.fillStyle = "#ffffff";
+    g.fillRect(0, 0, canvas.width, canvas.height);
+  }
   g.fillStyle = INK;
   for (let y = 0; y < h; y++)
     for (let x = 0; x < w; x++) if (b[y * w + x]) g.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);

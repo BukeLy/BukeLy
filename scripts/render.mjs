@@ -1,5 +1,5 @@
-// Fetch profile data, render the 1-bit scene/ pages in headless Chrome for light
-// and dark themes, and write README images to assets/:
+// Fetch profile data, render the 1-bit scene/ pages in headless Chrome, and write
+// README images to assets/, each as -light, -dark (desktop) and -mobile (phone):
 //   hero-*.webp   the looping hero (frames → lossless img2webp)
 //   focus-*.png, work-*.png, work-N-*.png   static sections
 // Each page paints its own canvases at final size, so images are read straight
@@ -20,7 +20,9 @@ const LOGIN = process.env.GH_LOGIN || "BukeLy";
 const LOOP_MS = 8000;
 const FRAMES = Number(process.env.FRAMES || 96);
 const ONLY = process.env.ONLY?.split(",");
-const THEMES = ["light", "dark"];
+// Image variants: desktop in each theme, plus one theme-neutral phone layout.
+const VARIANTS = { light: "theme=light", dark: "theme=dark", mobile: "theme=light&w=320" };
+const THEMES = Object.keys(VARIANTS);
 const REPOS = [
   ["VectifyAI", "PageIndex"],
   ["HKUDS", "LightRAG"],
@@ -91,7 +93,7 @@ const open = async (file, theme) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("requestfailed", (r) => errors.push(`request failed: ${r.url()}`));
-  await page.goto(`http://localhost:${port}/${file}?theme=${theme}`, { waitUntil: "networkidle0" });
+  await page.goto(`http://localhost:${port}/${file}?${VARIANTS[theme]}`, { waitUntil: "networkidle0" });
   await page.waitForFunction("window.__ready === true", { timeout: 60_000 }).catch((e) => {
     throw new Error(`${file} (${theme}) never became ready: ${errors.join("; ") || e.message}`);
   });

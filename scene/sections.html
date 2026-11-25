@@ -4,37 +4,20 @@
 <meta charset="utf-8" />
 <link rel="icon" href="data:," />
 <title>Bukely — sections</title>
-<link href="https://fonts.googleapis.com/css2?family=Jacquard+24&family=Jersey+10&family=Silkscreen&family=Pixelify+Sans&display=block" rel="stylesheet" />
 <style>html, body { margin: 0; background: transparent; } canvas { display: block; image-rendering: pixelated; }</style>
 </head>
 <body>
 <script type="module">
-  import { FONT, W, SCALE, loadFonts, layer, text, rect, dotted, bits, paint } from "./bit.js";
+  import { W, MOBILE, loadFonts, layer, text, wrap, dotted, win, sprite, bits, paint } from "./bit.js";
 
   const data = await (await fetch("data.json", { cache: "no-store" })).json();
   await loadFonts();
+  const probe = layer(10, 10).g;
+  const X0 = MOBILE ? 8 : 16, WIN_W = W - 2 * X0 + 1;
+  const STAR = ["...#...", "...#...", "#######", ".#####.", "..###..", ".##.##.", "##...##"];
+  const FOLDER = ["#####...........", "#....#..........", "################", "#..............#", "#..............#", "#..............#", "#..............#", "#..............#", "#..............#", "#..............#", "#..............#", "################"];
 
-  /** Greedy word wrap at a pixel width. */
-  const wrap = (g, str, size, font, width) => {
-    g.font = `${size}px ${font}`;
-    const lines = [""];
-    for (const word of str.split(" ")) {
-      const next = lines.at(-1) ? `${lines.at(-1)} ${word}` : word;
-      if (g.measureText(next).width > width && lines.at(-1)) lines.push(word);
-      else lines[lines.length - 1] = next;
-    }
-    return lines;
-  };
-  /** Section heading: an inverted band, like the hero's top bar. */
-  const band = (g, left, right) => {
-    rect(g, 0, 0, W, 10);
-    text(g, left, 3, 8, 8, FONT.label, { erase: true });
-    if (right) text(g, right, W - 3, 8, 8, FONT.label, { align: "right", erase: true });
-  };
-  const STAR = ["..#..", ".###.", "#####", ".###.", "#.#.#"];
-  const sprite = (g, rows, x, y) => rows.forEach((r, j) => [...r].forEach((c, i) => c === "#" && g.fillRect(x + i, y + j, 1, 1)));
-
-  /** Draw into a logical layer of height h, then output it as its own canvas. */
+  /** Draw into a layer of height h, then add it to the page as canvas #id. */
   const emit = (id, h, draw) => {
     const L = layer(W, h);
     draw(L.g);
@@ -42,46 +25,54 @@
     c.id = id;
     document.body.appendChild(c);
     paint(c, bits(L), W, h);
-    c.style.width = `${W * SCALE}px`;
   };
 
-  // Focus: one row per area, title left, body right.
+  // Focus: one window. Desktop puts the title beside the text; phones stack them.
   const focus = [
     ["Production systems", "PageIndex compute pipeline, multi-tenant AI APIs, reliability and observability."],
     ["RAG & document AI", "Reasoning-based retrieval, parser and OCR orchestration, long-document indexing."],
     ["Open source & agents", "LightRAG contributions, MCP-native tools, serverless agent workflows."],
   ];
-  const BODY_X = 188;
-  const probe = layer(W, 10).g;
-  const rows = focus.map(([title, body]) => ({ title, lines: wrap(probe, body, 12, FONT.body, W - BODY_X) }));
-  const rowH = (r) => Math.max(2, r.lines.length) * 13 + 10;
-  emit("focus", 20 + rows.reduce((s, r) => s + rowH(r), 0), (g) => {
-    band(g, "FOCUS", "WHAT I WORK ON");
-    let y = 14;
-    rows.forEach(({ title, lines }, i) => {
-      text(g, `${"ABC"[i]}.`, 0, y + 16, 8, FONT.label);
-      text(g, title, 14, y + 19, 20, FONT.num);
-      lines.forEach((ln, k) => text(g, ln, BODY_X, y + 16 + k * 13, 12, FONT.body));
-      y += rowH({ lines });
-      if (i < rows.length - 1) dotted(g, 0, y - 4, W);
+  const TEXT_X = MOBILE ? 16 : 330;
+  const rows = focus.map(([title, body]) => ({ title, lines: wrap(probe, body, 22, WIN_W - TEXT_X - 18) }));
+  const rowH = (r) => (MOBILE ? 24 : 0) + r.lines.length * 24 + 22;
+  emit("focus", 8 + 19 + rows.reduce((s, r) => s + rowH(r), 0) + 12, (g) => {
+    const c = win(g, X0, 6, WIN_W, 19 + rows.reduce((s, r) => s + rowH(r), 0) + 4, "Focus", { active: false });
+    let y = c.y + 6;
+    rows.forEach((r, i) => {
+      text(g, r.title, c.x + 15, y + 22, 22, { bold: true });
+      const ty = y + (MOBILE ? 24 : 0);
+      r.lines.forEach((ln, k) => text(g, ln, c.x + TEXT_X, ty + 22 + k * 24, 22));
+      y += rowH(r);
+      if (i < rows.length - 1) dotted(g, c.x + 8, y - 9, c.w - 16);
     });
   });
 
-  emit("work", 14, (g) => band(g, "SELECTED WORK", "BUILT AND CONTRIBUTED TO"));
+  emit("work", 34, (g) => {
+    sprite(g, FOLDER, X0 + 2, 10);
+    text(g, "Selected work", X0 + 26, 22, 22);
+    text(g, `${data.repos.length} items`, W - X0, 22, 11, { align: "right" });
+  });
 
   const k = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n));
   data.repos.forEach((r, i) => {
-    const descLines = wrap(probe, r.description, 12, FONT.body, 262);
-    const h = 36 + descLines.length * 13;
-    emit(`work-${i}`, h, (g) => {
-      text(g, String(i + 1).padStart(2, "0"), 0, 12, 8, FONT.label);
-      text(g, `${r.owner.toUpperCase()} /`, 18, 12, 8, FONT.label);
-      text(g, r.name, 18, 31, 20, FONT.num);
-      descLines.forEach((ln, j) => text(g, ln, 18, 44 + j * 13, 12, FONT.body));
-      const sw = text(g, k(r.stars), W - 1, 31, 20, FONT.num, { align: "right" });
-      sprite(g, STAR, W - 1 - sw - 8, 21);
-      text(g, `${r.role} / ${r.language}`.toUpperCase(), W - 1, 44, 8, FONT.label, { align: "right" });
-      dotted(g, 0, h - 1, W);
+    const meta = `${r.role.toLowerCase()} · ${r.language}`;
+    const lines = wrap(probe, r.description, 22, MOBILE ? WIN_W - 34 : WIN_W - 230);
+    const body = lines.length * 24 + (MOBILE ? 22 : 0);
+    const h = 19 + 14 + body + 12;
+    emit(`work-${i}`, 6 + h + 6, (g) => {
+      const c = win(g, X0, 6, WIN_W, h, `${r.owner} / ${r.name}`, { active: false });
+      lines.forEach((ln, j) => text(g, ln, c.x + 15, c.y + 30 + j * 24, 22));
+      if (MOBILE) {
+        const y = c.y + 30 + lines.length * 24 + 8;
+        sprite(g, STAR, c.x + 15, y - 7);
+        text(g, `${k(r.stars)}   ${meta}`, c.x + 27, y, 11);
+      } else {
+        const right = c.x + c.w - 15;
+        const sw = text(g, k(r.stars), right, c.y + 30, 22, { align: "right" });
+        sprite(g, STAR, right - sw - 12, c.y + 16);
+        text(g, meta, right, c.y + 50, 11, { align: "right" });
+      }
     });
   });
 
