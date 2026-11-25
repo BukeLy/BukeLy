@@ -1,29 +1,23 @@
-// A small 1-bit drawing kit. Everything is drawn at logical resolution on a 2D
-// canvas, collapsed to ink/paper bits, and written out at SCALE× with crisp pixels.
-// Paper is transparent so the images sit on GitHub's light or dark page.
+// A small 1-bit drawing kit in the style of an old desktop. Everything is drawn
+// on a 2D canvas at logical resolution, collapsed to ink/paper bits, and written
+// out at SCALE× with crisp pixels. Paper is transparent so the images sit on
+// GitHub's light or dark page.
 //
-// GitHub's profile README column is 846 CSS px wide, so images are W = 423
-// logical px, written at 4× (1692 px) and shown with width="846": every logical
-// pixel lands on exactly 2×2 screen pixels at 1x and 4×4 at 2x, never blurred.
+// GitHub's profile README column is 846 CSS px wide, so images are W = 846
+// logical px, written at 2× (1692 px) and shown with width="846": one logical
+// pixel is one CSS pixel, so nothing is ever resampled at 1x or 2x.
 
 const params = new URLSearchParams(location.search);
 export const theme = params.get("theme") === "dark" ? "dark" : "light";
-export const W = 423;
-export const SCALE = 4;
+export const W = 846;
+export const SCALE = 2;
 export const INK = theme === "dark" ? "#f0f6fc" : "#000000";
-export const FONT = {
-  name: '"Jacquard 24"',
-  num: '"Jersey 10"',
-  label: '"Silkscreen"',
-  body: '"Pixelify Sans"',
-};
+// Departure Mono (SIL OFL, scene/fonts) is pixel-exact at multiples of 11 px.
+const FAMILY = '"Departure Mono"';
 
 export async function loadFonts() {
-  await Promise.all(
-    ['72px "Jacquard 24"', '40px "Jersey 10"', '8px "Silkscreen"', '16px "Pixelify Sans"'].map((f) =>
-      document.fonts.load(f),
-    ),
-  );
+  const face = new FontFace("Departure Mono", `url(${new URL("fonts/DepartureMono-Regular.woff2", import.meta.url)})`);
+  document.fonts.add(await face.load());
 }
 
 /** A logical-resolution drawing surface. Draw in black; alpha decides ink. */
@@ -31,28 +25,75 @@ export function layer(w, h) {
   const c = new OffscreenCanvas(w, h);
   const g = c.getContext("2d", { willReadFrequently: true });
   g.imageSmoothingEnabled = false;
-  g.fillStyle = g.strokeStyle = "#000";
+  g.fillStyle = "#000";
   return { c, g, w, h };
 }
 
-export function text(g, str, x, y, size, font, { align = "left", erase = false } = {}) {
+/** Text at a whole-pixel position. `bold` overprints 1px right, as old system fonts did. */
+export function text(g, str, x, y, size = 11, { align = "left", erase = false, bold = false } = {}) {
   g.save();
-  g.font = `${size}px ${font}`;
+  g.font = `${size}px ${FAMILY}`;
   g.textBaseline = "alphabetic";
   if (erase) g.globalCompositeOperation = "destination-out";
-  // Align by hand so the glyphs always start on a whole pixel; half pixels blur pixel fonts.
-  const width = Math.ceil(g.measureText(str).width);
-  const left = align === "center" ? x - width / 2 : align === "right" ? x - width : x;
-  g.fillText(str, Math.round(left), Math.round(y));
+  const width = Math.ceil(g.measureText(str).width) + (bold ? 1 : 0);
+  const left = Math.round(align === "center" ? x - width / 2 : align === "right" ? x - width : x);
+  g.fillText(str, left, Math.round(y));
+  if (bold) g.fillText(str, left + 1, Math.round(y));
   g.restore();
   return width;
 }
 
+/** Greedy word wrap to a pixel width. */
+export function wrap(g, str, size, width) {
+  g.font = `${size}px ${FAMILY}`;
+  const lines = [""];
+  for (const word of str.split(" ")) {
+    const next = lines.at(-1) ? `${lines.at(-1)} ${word}` : word;
+    if (g.measureText(next).width > width && lines.at(-1)) lines.push(word);
+    else lines[lines.length - 1] = next;
+  }
+  return lines;
+}
+
 export const rect = (g, x, y, w, h) => g.fillRect(x, y, w, h);
+export const paper = (g, x, y, w, h) => g.clearRect(x, y, w, h);
+export const frame = (g, x, y, w, h) => {
+  rect(g, x, y, w, 1); rect(g, x, y + h - 1, w, 1); rect(g, x, y, 1, h); rect(g, x + w - 1, y, 1, h);
+};
 /** 1px dotted rule: every other pixel. */
 export const dotted = (g, x, y, w) => {
   for (let i = 0; i < w; i += 2) g.fillRect(x + i, y, 1, 1);
 };
+/** The desktop: a light 1-in-4 pattern, anchored to the canvas so it tiles evenly. */
+export function desk(g, x, y, w, h) {
+  for (let j = y; j < y + h; j += 2)
+    for (let i = x; i < x + w; i++) if (i % 4 === (j % 4 === 0 ? 0 : 2)) g.fillRect(i, j, 1, 1);
+}
+
+export const TITLE_H = 19;
+/**
+ * A window: 1px frame with a drop shadow, a title bar (striped when active) and
+ * a close box. Clears what is underneath. Returns the content rect.
+ */
+export function win(g, x, y, w, h, title, { active = true } = {}) {
+  paper(g, x, y, w + 1, h + 1);
+  rect(g, x + 1, y + h, w, 1);
+  rect(g, x + w, y + 1, 1, h);
+  frame(g, x, y, w, h);
+  rect(g, x, y + TITLE_H - 1, w, 1);
+  if (active) {
+    for (let i = 0; i < 6; i++) rect(g, x + 2, y + 4 + i * 2, w - 4, 1);
+    paper(g, x + 7, y + 3, 15, 13);
+    frame(g, x + 9, y + 4, 11, 11);
+  }
+  g.font = `11px ${FAMILY}`;
+  const tw = Math.ceil(g.measureText(title).width) + 1;
+  const tx = Math.round(x + (w - tw) / 2);
+  paper(g, tx - 7, y + 1, tw + 14, TITLE_H - 2);
+  text(g, title, tx, y + 13, 11, { bold: active });
+  return { x: x + 1, y: y + TITLE_H, w: w - 2, h: h - TITLE_H - 1 };
+}
+
 /** Bresenham line in whole pixels. */
 export function line(g, x0, y0, x1, y1) {
   x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
@@ -66,6 +107,10 @@ export function line(g, x0, y0, x1, y1) {
     if (e2 <= dx) { err += dx; y0 += sy; }
   }
 }
+
+/** Pixel sprite from rows of "#" and ".". */
+export const sprite = (g, rows, x, y) =>
+  rows.forEach((r, j) => [...r].forEach((c, i) => c === "#" && g.fillRect(x + i, y + j, 1, 1)));
 
 /** Ordered-dither threshold for pixel (x, y), 4×4 Bayer. */
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16);

@@ -66,7 +66,7 @@ await writeFile(path.join(sceneDir, "data.json"), JSON.stringify(data));
 await mkdir(assets, { recursive: true });
 console.log(`data: ${data.total} contributions, ${data.repos.length} repos`);
 
-const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json" };
+const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".woff2": "font/woff2" };
 const server = createServer(async (req, res) => {
   const file = path.join(sceneDir, path.normalize(new URL(req.url, "http://x").pathname));
   if (!file.startsWith(sceneDir + path.sep)) return res.writeHead(403).end();

@@ -4,7 +4,6 @@
 <meta charset="utf-8" />
 <link rel="icon" href="data:," />
 <title>Bukely — hero</title>
-<link href="https://fonts.googleapis.com/css2?family=Jacquard+24&family=Jersey+10&family=Silkscreen&family=Pixelify+Sans&display=block" rel="stylesheet" />
 <style>html, body { margin: 0; background: transparent; } canvas { display: block; image-rendering: pixelated; }</style>
 <script type="importmap">
   { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
@@ -14,41 +13,62 @@
 <canvas id="out"></canvas>
 <script type="module">
   import * as THREE from "three";
-  import { theme, FONT, W, loadFonts, layer, text, rect, dotted, line, bayer, bits, paint } from "./bit.js";
+  import { theme, W, loadFonts, layer, text, rect, dotted, desk, win, sprite, line, bayer, bits, paint } from "./bit.js";
 
-  const H = 252;
-  const STAGE = { x: 0, y: 116, w: W, h: H - 116 };
+  const H = 404;
   const TAU = Math.PI * 2;
   const data = await (await fetch("data.json", { cache: "no-store" })).json();
   await loadFonts();
   const fmt = (n) => n.toLocaleString("en-US");
-  const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const shortDate = (d) => `${MONTHS[+d.slice(5, 7) - 1]} ${+d.slice(8, 10)}`;
+  const monthYear = (d) => `${MONTHS[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}`;
+  const CUBE = ["....###....", "..##...##..", "##.......##", "#.##...##.#", "#...###...#", "#....#....#", "#....#....#", "#....#....#", "##...#...##", "..##.#.##..", "....###...."];
 
-  // ---- Static layer: everything that does not move. ----
-  const base = layer(W, H);
-  const g = base.g;
-  rect(g, 0, 0, W, 10);
-  text(g, "BUKELY / AI ENGINEER", 3, 8, 8, FONT.label, { erase: true });
-  text(g, `LAST 365 DAYS / ${data.updated}`, W - 3, 8, 8, FONT.label, { align: "right", erase: true });
+  // ---- Back layer: menu bar, desktop, and the skyline window's frame. ----
+  const back = layer(W, H);
+  let g = back.g;
+  desk(g, 0, 20, W, H - 20);
+  rect(g, 0, 19, W, 1);
+  sprite(g, CUBE, 10, 4);
+  text(g, "Bukely", 30, 14, 11, { bold: true });
+  ["File", "Edit", "View"].forEach((s, i) => text(g, s, 92 + i * 50, 14));
+  text(g, data.updated, W - 10, 14, 11, { align: "right" });
 
-  text(g, "Bukely", 0, 78, 72, FONT.name);
-  text(g, "BUILDING", 230, 34, 8, FONT.label);
-  ["production RAG systems,", "document intelligence,", "agentic developer tools."].forEach((s, i) => text(g, s, 230, 52 + i * 14, 12, FONT.body));
+  const B = win(g, 372, 50, 458, 340, "contributions — last 365 days", { active: false });
+  const first = data.weeks[0][0].date, last = data.weeks.at(-1).at(-1).date;
+  text(g, "one block per day", B.x + 26, B.y + 15);
+  text(g, `${monthYear(first)} – ${monthYear(last)}`, B.x + B.w - 10, B.y + 15, 11, { align: "right" });
+  rect(g, B.x, B.y + 21, B.w, 1);
+  const STAGE = { x: B.x, y: B.y + 22, w: B.w, h: B.h - 22 };
+  const backBits = bits(back);
 
-  dotted(g, 0, 88, W);
+  // ---- Front layer: the active "About" window, which overlaps the skyline window. ----
+  const A_BOX = { x: 16, y: 34, w: 372, h: 330 };
+  const front = layer(W, H);
+  g = front.g;
+  const A = win(g, A_BOX.x, A_BOX.y, A_BOX.w, A_BOX.h, "About Bukely");
+  const ax = A.x + 16;
+  text(g, "Bukely", ax - 2, A.y + 50, 44);
+  text(g, "AI engineer", ax, A.y + 80, 22);
+  dotted(g, A.x + 8, A.y + 96, A.w - 16);
+  text(g, "Building", ax, A.y + 116);
+  const lines = ["production RAG systems,", "document intelligence,", "agentic developer tools."];
+  lines.forEach((s, i) => text(g, s, ax, A.y + 142 + i * 24, 22));
+  dotted(g, A.x + 8, A.y + 210, A.w - 16);
   const stats = [
-    [fmt(data.total), "CONTRIBUTIONS"],
-    [`${data.longestStreak}`, "DAY STREAK"],
-    [data.busiest.label.toUpperCase().replace("’", "'"), "BUSIEST MONTH"],
+    [fmt(data.total), "contributions"],
+    [`${data.longestStreak} days`, "longest streak"],
+    [data.busiest.label.replace("’", "'"), `busiest month, ${fmt(data.busiest.count)}`],
   ];
   stats.forEach(([n, label], i) => {
-    const x = 1 + i * 145; // Jersey's first glyph overhangs x=0
-    const nw = text(g, n, x, 107, 20, FONT.num);
-    text(g, label, x + nw + 5, 105, 8, FONT.label);
+    const y = A.y + 240 + i * 28;
+    const nw = text(g, n, ax, y, 22);
+    text(g, label, ax + nw + 10, y);
   });
-  dotted(g, 0, 112, W);
-  const staticBits = bits(base);
+  const frontBits = bits(front);
+  g.font = "22px 'Departure Mono'";
+  const caret = { x: ax + Math.ceil(g.measureText(lines[2]).width) + 3, y: A.y + 142 + 2 * 24 - 16, w: 11, h: 19 };
 
   // ---- The skyline: rendered small with flat light, then dithered to bits. ----
   const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, preserveDrawingBuffer: true });
@@ -57,7 +77,7 @@
   renderer.setClearColor(0, 0);
   renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // keep light values linear so dither density tracks them
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(13, STAGE.w / STAGE.h, 1, 800);
+  const camera = new THREE.PerspectiveCamera(20, STAGE.w / STAGE.h, 1, 800);
   // Three clearly separated tones: lit tops, half-lit fronts, dark sides.
   scene.add(new THREE.AmbientLight(0xffffff, 0.08));
   const key = new THREE.DirectionalLight(0xffffff, 1.0);
@@ -74,7 +94,7 @@
   const X = (wi) => wi - (WEEKS - 1) / 2;
   const Z = (wd) => wd - 3;
   const bars = new THREE.InstancedMesh(
-    new THREE.BoxGeometry(0.66, 1, 0.66).translate(0, 0.5, 0),
+    new THREE.BoxGeometry(0.7, 1, 0.7).translate(0, 0.5, 0),
     new THREE.MeshLambertMaterial({ color: 0xffffff, flatShading: true }),
     days.length,
   );
@@ -90,7 +110,7 @@
 
   const best = days.find((d) => d.date === data.bestDay.date);
   const bestTop = new THREE.Vector3(X(best.wi), 0.2 + height(best.count), Z(best.weekday));
-  const monthAnchors = data.months.map((mo) => ({ label: mo.label.toUpperCase(), p: new THREE.Vector3(X(mo.week) + 0.5, 0, 5.4) }));
+  const monthAnchors = data.months.map((mo) => ({ label: mo.label, p: new THREE.Vector3(X(mo.week) + 0.5, 0, 5.4) }));
 
   const scratch = layer(STAGE.w, STAGE.h);
   const over = layer(W, H);
@@ -98,20 +118,22 @@
     const p = v.clone().project(camera);
     return [STAGE.x + ((p.x + 1) / 2) * STAGE.w, STAGE.y + ((1 - p.y) / 2) * STAGE.h];
   };
+  const inStage = (x, y) => x >= STAGE.x && x < STAGE.x + STAGE.w && y >= STAGE.y && y < STAGE.y + STAGE.h;
+  const underA = (x, y) => x >= A_BOX.x && x <= A_BOX.x + A_BOX.w && y >= A_BOX.y && y <= A_BOX.y + A_BOX.h;
 
   const out = document.getElementById("out");
   /** Draw loop phase t in [0, 1); the loop is seamless at t = 1. */
   window.__frame = (t) => {
     // A slow sway; seamless because it is a full sine period.
-    const a = -0.42 + 0.1 * Math.sin(TAU * t);
-    camera.position.set(Math.sin(a) * 96, 44, Math.cos(a) * 96);
-    camera.lookAt(0, 2.2, 0);
+    const a = -0.42 + 0.12 * Math.sin(TAU * t);
+    camera.position.set(Math.sin(a) * 150, 64, Math.cos(a) * 150);
+    camera.lookAt(0, 2.6, 0);
     renderer.render(scene, camera);
 
     scratch.g.clearRect(0, 0, STAGE.w, STAGE.h);
     scratch.g.drawImage(renderer.domElement, 0, 0);
     const px = scratch.g.getImageData(0, 0, STAGE.w, STAGE.h).data;
-    const frame = staticBits.slice();
+    const f = backBits.slice();
     for (let y = 0; y < STAGE.h; y++)
       for (let x = 0; x < STAGE.w; x++) {
         const i = (y * STAGE.w + x) * 4;
@@ -120,29 +142,35 @@
         const edge = r > 0.8 && gg < 0.2 && b < 0.2;
         const lum = 0.299 * r + 0.587 * gg + 0.114 * b;
         // Light theme inks the shadows; dark theme inks the lit faces (lifted, or the fronts vanish).
-        if (edge || (theme === "dark" ? lum ** 0.6 : 1 - lum) > bayer(x, y)) frame[(STAGE.y + y) * W + STAGE.x + x] = 1;
+        if (edge || (theme === "dark" ? lum ** 0.6 : 1 - lum) > bayer(x, y)) f[(STAGE.y + y) * W + STAGE.x + x] = 1;
       }
 
     // Overlays that follow the model: month ticks and the best-day callout.
     over.g.clearRect(0, 0, W, H);
     monthAnchors.forEach(({ label, p }) => {
       const [x, y] = project(p);
-      text(over.g, label, x, y + 9, 8, FONT.label, { align: "center" });
+      text(over.g, label, x, y + 12, 11, { align: "center" });
     });
     const [bx, by] = project(bestTop);
-    const lx = Math.round(bx - 26), ly = STAGE.y + 8;
+    const label = `best day: ${shortDate(best.date)}, ${fmt(best.count)}`;
+    over.g.font = "11px 'Departure Mono'";
+    const lw = Math.ceil(over.g.measureText(label).width) + 12;
+    const lx = Math.round(bx - 30), ly = STAGE.y + 18;
     line(over.g, bx, by - 3, bx, ly);
     line(over.g, bx, ly, lx, ly);
-    over.g.font = `8px ${FONT.label}`;
-    const label = `BEST DAY ${shortDate(best.date)} / ${fmt(best.count)}`;
-    const lw = Math.ceil(over.g.measureText(label).width) + 6;
-    for (let y = ly - 5; y < ly + 6; y++) for (let x = lx - lw; x < lx; x++) frame[y * W + x] = 0; // box is opaque
-    rect(over.g, lx - lw, ly - 5, lw, 11);
-    text(over.g, label, lx - 3, ly + 3, 8, FONT.label, { align: "right", erase: true });
+    // The label box is opaque: clear under it, then frame it.
+    for (let y = ly - 9; y < ly + 9; y++) for (let x = lx - lw; x < lx; x++) f[y * W + x] = 0;
+    rect(over.g, lx - lw, ly - 9, lw, 1); rect(over.g, lx - lw, ly + 8, lw, 1); rect(over.g, lx - lw, ly - 9, 1, 18); rect(over.g, lx - 1, ly - 9, 1, 18);
+    text(over.g, label, lx - 6, ly + 4, 11, { align: "right" });
     const ob = bits(over);
-    for (let i = 0; i < ob.length; i++) if (ob[i]) frame[i] = 1;
+    for (let i = 0; i < ob.length; i++) if (ob[i] && inStage(i % W, (i / W) | 0)) f[i] = 1;
 
-    paint(out, frame, W, H);
+    // The front window covers everything under it; its caret blinks twice a second.
+    for (let y = A_BOX.y; y <= A_BOX.y + A_BOX.h; y++)
+      for (let x = A_BOX.x; x <= A_BOX.x + A_BOX.w; x++) f[y * W + x] = frontBits[y * W + x];
+    if ((t * 16) % 2 < 1) for (let y = caret.y; y < caret.y + caret.h; y++) for (let x = caret.x; x < caret.x + caret.w; x++) f[y * W + x] = 1;
+
+    paint(out, f, W, H);
   };
   window.__frame(0);
   window.__ready = true;
