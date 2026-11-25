@@ -25,7 +25,7 @@
   <picture>
     <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-0-mobile.png" />
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-0-dark.png" />
-    <img alt="PageIndex: document index for vectorless, reasoning-based RAG (contributor)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-0-light.png" width="846" />
+    <img alt="PageIndex: document index for vectorless, reasoning-based RAG (maintainer)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-0-light.png" width="846" />
   </picture>
 </a>
 <a href="https://github.com/HKUDS/LightRAG">

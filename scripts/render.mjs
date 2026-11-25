@@ -23,8 +23,9 @@ const ONLY = process.env.ONLY?.split(",");
 // Image variants: desktop in each theme, plus one theme-neutral phone layout.
 const VARIANTS = { light: "theme=light", dark: "theme=dark", mobile: "theme=light&w=320" };
 const THEMES = Object.keys(VARIANTS);
+// [owner, name, role?]. Role defaults to Author for the user's own repos, Contributor otherwise.
 const REPOS = [
-  ["VectifyAI", "PageIndex"],
+  ["VectifyAI", "PageIndex", "Maintainer"],
   ["HKUDS", "LightRAG"],
   ["HKUDS", "DeepTutor"],
   ["BukeLy", "peerbox"],
@@ -61,7 +62,7 @@ const data = {
       description: cleanDescription(r.description, r.name),
       stars: r.stargazerCount,
       language: r.primaryLanguage?.name ?? "—",
-      role: r.owner.login.toLowerCase() === LOGIN.toLowerCase() ? "Author" : "Contributor",
+      role: REPOS[i][2] ?? (r.owner.login.toLowerCase() === LOGIN.toLowerCase() ? "Author" : "Contributor"),
     };
   }),
 };
