@@ -20,6 +20,8 @@ test("summarize computes totals, streaks, busiest month and month labels", () =>
   ];
   const s = summarize(weeks, new Date("2026-11-25T08:00:00Z"));
   assert.equal(s.total, 20);
+  assert.equal(s.activeDays, 6);
+  assert.equal(s.last90, 20); // the fixture is shorter than 90 days
   assert.equal(s.longestStreak, 3); // 09-28..09-30; 10-02..10-04 is also 3
   assert.deepEqual(s.bestDay, { date: "2026-10-03", count: 9 });
   assert.deepEqual(s.busiest, { label: "Oct ’26", count: 13 });

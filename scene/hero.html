@@ -27,11 +27,13 @@
   // ---- Front window ("About") content, measured first so the layout can size around it. ----
   const probe = layer(10, 10).g;
   const A_W = MOBILE ? W - 17 : 372;
-  const tagline = wrap(probe, "production RAG systems, document intelligence, agentic developer tools.", 22, A_W - 34);
+  // Desktop breaks the tagline by phrase; phones wrap it to fit.
+  const PHRASES = ["document AI at PageIndex,", "agent tools over MCP,", "and WordLinea."];
+  const tagline = MOBILE ? wrap(probe, PHRASES.join(" "), 22, A_W - 34) : PHRASES;
   const stats = [
     [fmt(data.total), "contributions"],
-    [`${data.longestStreak} days`, "longest streak"],
-    [data.busiest.label.replace("’", "'"), `busiest month, ${fmt(data.busiest.count)}`],
+    [fmt(data.last90), "in the last 90 days"],
+    [fmt(data.activeDays), "active days"],
   ];
   const tagY = 142, statsY = tagY + tagline.length * 24 + 20;
   const A_BOX = { x: MOBILE ? 8 : 16, y: MOBILE ? 32 : 34, w: A_W, h: 19 + statsY + 2 * 28 + 16 };
@@ -64,9 +66,10 @@
   const A = win(g, A_BOX.x, A_BOX.y, A_BOX.w, A_BOX.h, "About Bukely");
   const ax = A.x + 16;
   text(g, "Bukely", ax - 2, A.y + 50, 44);
-  text(g, "AI engineer", ax, A.y + 80, 22);
+  const tw = text(g, "AI engineer", ax, A.y + 80, 22);
+  text(g, "Kuala Lumpur", ax + tw + 10, A.y + 78);
   dotted(g, A.x + 8, A.y + 96, A.w - 16);
-  text(g, "Building", ax, A.y + 116);
+  text(g, "Now building", ax, A.y + 116);
   tagline.forEach((s, i) => text(g, s, ax, A.y + tagY + i * 24, 22));
   dotted(g, A.x + 8, A.y + statsY - 28, A.w - 16);
   stats.forEach(([n, label], i) => {

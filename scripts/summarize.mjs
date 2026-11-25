@@ -54,6 +54,9 @@ export function summarize(weeks, now) {
     months,
     busiest: { label: `${monthName(busiestKey)} ’${busiestKey.slice(2, 4)}`, count: busiestCount },
     longestStreak,
+    activeDays: days.filter((d) => d.contributionCount).length,
+    // The calendar ends today, so its last 90 entries are the last 90 days.
+    last90: days.slice(-90).reduce((sum, d) => sum + d.contributionCount, 0),
     bestDay: { date: best.date, count: best.contributionCount },
   };
 }

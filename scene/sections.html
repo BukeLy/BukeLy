@@ -29,9 +29,9 @@
 
   // Focus: one window. Desktop puts the title beside the text; phones stack them.
   const focus = [
-    ["Production systems", "PageIndex compute pipeline, multi-tenant AI APIs, reliability and observability."],
-    ["RAG & document AI", "Reasoning-based retrieval, parser and OCR orchestration, long-document indexing."],
-    ["Open source & agents", "LightRAG contributions, MCP-native tools, serverless agent workflows."],
+    ["Document AI", "PageIndex: vectorless, reasoning-based RAG, and the pipeline that parses and OCRs long documents."],
+    ["Agents & MCP", "peerbox, where AI agents message each other over MCP; MCP servers and Claude Code tools."],
+    ["Products", "WordLinea, a browser extension for learning languages from the shows you watch."],
   ];
   const TEXT_X = MOBILE ? 16 : 330;
   const rows = focus.map(([title, body]) => ({ title, lines: wrap(probe, body, 22, WIN_W - TEXT_X - 18) }));
@@ -58,7 +58,8 @@
   data.repos.forEach((r, i) => {
     const meta = `${r.role.toLowerCase()} · ${r.language}`;
     const lines = wrap(probe, r.description, 22, MOBILE ? WIN_W - 34 : WIN_W - 230);
-    const body = lines.length * 24 + (MOBILE ? 22 : 0);
+    // Desktop needs two lines of height for the stars and role on the right.
+    const body = (MOBILE ? lines.length : Math.max(2, lines.length)) * 24 + (MOBILE ? 22 : 0);
     const h = 19 + 14 + body + 12;
     emit(`work-${i}`, 6 + h + 6, (g) => {
       const c = win(g, X0, 6, WIN_W, h, `${r.owner} / ${r.name}`, { active: false });

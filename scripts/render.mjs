@@ -26,8 +26,9 @@ const THEMES = Object.keys(VARIANTS);
 const REPOS = [
   ["VectifyAI", "PageIndex"],
   ["HKUDS", "LightRAG"],
+  ["HKUDS", "DeepTutor"],
+  ["BukeLy", "peerbox"],
   ["BukeLy", "rag-api"],
-  ["BukeLy", "Stateless-FileSystem-Agent"],
 ];
 
 const token = process.env.GH_TOKEN;

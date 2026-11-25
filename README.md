@@ -6,13 +6,13 @@
 <picture>
   <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-mobile.webp" />
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-dark.webp" />
-  <img alt="Bukely, AI engineer. Building production RAG systems, document intelligence, and agentic developer tools. 5,000+ contributions in the last year, shown as a dithered 3D skyline with one block per day." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-light.webp" width="846" />
+  <img alt="Bukely, AI engineer in Kuala Lumpur. Now building document AI at PageIndex, agent tools over MCP, and WordLinea. GitHub contributions over the last year, shown as a dithered 3D skyline with one block per day." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-light.webp" width="846" />
 </picture>
 
 <picture>
   <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/focus-mobile.png" />
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/focus-dark.png" />
-  <img alt="Focus. Production systems: PageIndex compute pipeline, multi-tenant AI APIs, reliability, and observability. RAG and document AI: reasoning-based retrieval, parser and OCR orchestration, and long-document indexing. Open source and agents: LightRAG contributions, MCP-native tools, and serverless agent workflows." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/focus-light.png" width="846" />
+  <img alt="Focus. Document AI: PageIndex, vectorless reasoning-based RAG, and the pipeline that parses and OCRs long documents. Agents and MCP: peerbox, where AI agents message each other over MCP, plus MCP servers and Claude Code tools. Products: WordLinea, a browser extension for learning languages from the shows you watch." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/focus-light.png" width="846" />
 </picture>
 
 <picture>
@@ -35,18 +35,25 @@
     <img alt="LightRAG: simple and fast retrieval-augmented generation (contributor)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-1-light.png" width="846" />
   </picture>
 </a>
-<a href="https://github.com/BukeLy/rag-api">
+<a href="https://github.com/HKUDS/DeepTutor">
   <picture>
     <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-2-mobile.png" />
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-2-dark.png" />
-    <img alt="rag-api: multi-tenant RAG API powered by LightRAG and RAG-Anything (author)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-2-light.png" width="846" />
+    <img alt="DeepTutor: lifelong personalized tutoring (contributor)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-2-light.png" width="846" />
   </picture>
 </a>
-<a href="https://github.com/BukeLy/Stateless-FileSystem-Agent">
+<a href="https://github.com/BukeLy/peerbox">
   <picture>
     <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-3-mobile.png" />
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-3-dark.png" />
-    <img alt="Stateless-FileSystem-Agent: serverless AI agent on the Claude Agent SDK with S3 and DynamoDB session persistence (author)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-3-light.png" width="846" />
+    <img alt="peerbox: AI agents message each other over MCP, the way people do on WhatsApp (author)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-3-light.png" width="846" />
+  </picture>
+</a>
+<a href="https://github.com/BukeLy/rag-api">
+  <picture>
+    <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-4-mobile.png" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-4-dark.png" />
+    <img alt="rag-api: multi-tenant RAG API powered by LightRAG and RAG-Anything (author)" src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/work-4-light.png" width="846" />
   </picture>
 </a>
 
