@@ -12,10 +12,14 @@
   <img alt="01 — Focus. Production systems: PageIndex compute pipeline, multi-tenant AI APIs, reliability, and observability. RAG and document AI: reasoning-based retrieval, parser and OCR orchestration, and long-document indexing. Open source and agents: LightRAG contributions, MCP-native tools, and serverless agent workflows." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/focus-light.png" width="100%" />
 </picture>
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/activity-top-dark.png" />
+  <img alt="02 — Activity. GitHub contributions in the last twelve months, longest streak, and busiest month." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/activity-top-light.png" width="100%" />
+</picture>
 <a href="https://bukely.github.io/BukeLy/activity.html">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/activity-dark.webp" />
-    <img alt="02 — Activity. One block per day of GitHub contributions over the last twelve months." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/activity-light.webp" width="100%" />
+    <img alt="A 3D skyline with one block per day of contributions over the last twelve months. Click to explore in 3D." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/activity-light.webp" width="100%" />
   </picture>
 </a>
 
