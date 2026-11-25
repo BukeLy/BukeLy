@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "render": "node scripts/render.mjs",
-    "test": "node --test scripts/"
+    "test": "node --test scripts/*.test.mjs"
   },
   "devDependencies": {
     "puppeteer-core": "25.17.0"
