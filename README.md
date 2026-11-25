@@ -59,4 +59,4 @@
 
 <br />
 
-<sub>Contact — <a href="mailto:bukely0119@foxmail.com">bukely0119@foxmail.com</a> · <a href="https://github.com/BukeLy">github.com/BukeLy</a></sub>
+<sub>Contact — <a href="mailto:bukely0119@gmail.com">bukely0119@gmail.com</a> · <a href="https://github.com/BukeLy">github.com/BukeLy</a></sub>
