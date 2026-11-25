@@ -31,27 +31,27 @@ Building production RAG systems, document intelligence, and agentic developer to
 <div align="center">
   <a href="https://github.com/VectifyAI/PageIndex">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=github_dark&cache_seconds=21600" />
-      <img alt="PageIndex" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=default&cache_seconds=21600" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=github_dark&cache_seconds=21600" />
+      <img alt="PageIndex" src="https://bukely-readme-stats.vercel.app/api/pin/?username=VectifyAI&repo=PageIndex&theme=default&cache_seconds=21600" />
     </picture>
   </a>
   <a href="https://github.com/HKUDS/LightRAG">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=github_dark&cache_seconds=21600" />
-      <img alt="LightRAG" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=default&cache_seconds=21600" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=github_dark&cache_seconds=21600" />
+      <img alt="LightRAG" src="https://bukely-readme-stats.vercel.app/api/pin/?username=HKUDS&repo=LightRAG&theme=default&cache_seconds=21600" />
     </picture>
   </a>
   <br />
   <a href="https://github.com/bukely/rag-api">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=github_dark&cache_seconds=21600" />
-      <img alt="rag-api" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=default&cache_seconds=21600" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=github_dark&cache_seconds=21600" />
+      <img alt="rag-api" src="https://bukely-readme-stats.vercel.app/api/pin/?username=bukely&repo=rag-api&theme=default&cache_seconds=21600" />
     </picture>
   </a>
   <a href="https://github.com/BukeLy/Stateless-FileSystem-Agent">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=github_dark&cache_seconds=21600" />
-      <img alt="Stateless-FileSystem-Agent" src="https://bukely-github-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=default&cache_seconds=21600" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=github_dark&cache_seconds=21600" />
+      <img alt="Stateless-FileSystem-Agent" src="https://bukely-readme-stats.vercel.app/api/pin/?username=BukeLy&repo=Stateless-FileSystem-Agent&theme=default&cache_seconds=21600" />
     </picture>
   </a>
 </div>
@@ -61,22 +61,22 @@ Building production RAG systems, document intelligence, and agentic developer to
 <div align="center">
   <a href="https://github.com/BukeLy">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api?username=BukeLy&show_icons=true&theme=github_dark&hide_border=true&count_private=true&include_all_commits=true&hide_title=true" />
-      <img height="170" alt="Bukely's GitHub stats" src="https://bukely-github-readme-stats.vercel.app/api?username=BukeLy&show_icons=true&theme=default&hide_border=true&count_private=true&include_all_commits=true&hide_title=true" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api?username=BukeLy&show_icons=true&theme=github_dark&hide_border=true&count_private=true&include_all_commits=true&hide_title=true" />
+      <img height="170" alt="Bukely's GitHub stats" src="https://bukely-readme-stats.vercel.app/api?username=BukeLy&show_icons=true&theme=default&hide_border=true&count_private=true&include_all_commits=true&hide_title=true" />
     </picture>
   </a>
   <a href="https://github.com/BukeLy">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/top-langs/?username=BukeLy&layout=compact&theme=github_dark&hide_border=true&langs_count=8&hide_title=true" />
-      <img height="170" alt="Bukely's top languages" src="https://bukely-github-readme-stats.vercel.app/api/top-langs/?username=BukeLy&layout=compact&theme=default&hide_border=true&langs_count=8&hide_title=true" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/top-langs/?username=BukeLy&layout=compact&theme=github_dark&hide_border=true&langs_count=8&hide_title=true" />
+      <img height="170" alt="Bukely's top languages" src="https://bukely-readme-stats.vercel.app/api/top-langs/?username=BukeLy&layout=compact&theme=default&hide_border=true&langs_count=8&hide_title=true" />
     </picture>
   </a>
 </div>
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
-    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-github-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://bukely-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=github_dark&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
+    <img width="760" alt="Bukely's monthly contributions" src="https://bukely-readme-stats.vercel.app/api/monthly-contribs?username=BukeLy&theme=default&hide_border=true&hide_sources=true&custom_title=Monthly%20Contributions&cache_seconds=43200&v=20260509-compact" />
   </picture>
 </div>
 
