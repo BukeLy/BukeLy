@@ -1,6 +1,7 @@
 // Fetch profile data, render the scene/ pages in headless Chrome for light and
 // dark themes, and write README images to assets/:
 //   hero-*.webp, activity-*.webp   looping animations (frames → img2webp)
+//   activity-top-*.png   the static summary above the activity animation
 //   focus-*.png, work-*.png, work-N-*.png   static sections
 // Env: GH_TOKEN (required), GH_LOGIN, CHROME_PATH, FRAMES, ONLY (comma list of outputs).
 import { execFileSync } from "node:child_process";
@@ -17,6 +18,7 @@ const assets = path.join(root, "assets");
 const LOGIN = process.env.GH_LOGIN || "BukeLy";
 const LOOP_MS = 8000; // must match LOOP_SECONDS in scene/common.js
 const FRAMES = Number(process.env.FRAMES || 96);
+const ANIM_WIDTH = 1200;
 const ONLY = process.env.ONLY?.split(",");
 const THEMES = ["light", "dark"];
 const REPOS = [
@@ -83,18 +85,35 @@ const browser = await puppeteer.launch({
   args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
 });
 
-/** Open a scene page at 1600px wide and wait until it reports ready. */
-const open = async (file, theme) => {
+/** Open a scene page at `width` px and wait until it reports ready. */
+const open = async (file, theme, width = 1600) => {
   const page = await browser.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("requestfailed", (r) => errors.push(`request failed: ${r.url()}`));
-  await page.setViewport({ width: 1600, height: 1000, deviceScaleFactor: 1 });
-  await page.goto(`http://localhost:${port}/${file}?capture&theme=${theme}`, { waitUntil: "networkidle0" });
+  await page.setViewport({ width, height: 1000, deviceScaleFactor: 1 });
+  await page.goto(`http://localhost:${port}/${file}?capture&theme=${theme}&w=${width}`, { waitUntil: "networkidle0" });
   await page.waitForFunction("window.__ready === true", { timeout: 60_000 }).catch((e) => {
     throw new Error(`${file} (${theme}) never became ready: ${errors.join("; ") || e.message}`);
   });
   return { page, errors };
+};
+
+/** @returns {Promise<{x: number, y: number, width: number, height: number}>} */
+const box = (page, sel) =>
+  page.$eval(sel, (el) => {
+    const r = el.getBoundingClientRect();
+    return { x: r.x, y: r.y + scrollY, width: r.width, height: r.height };
+  });
+
+/** Activity page halves: static summary on top, animated skyline below. */
+const split = async (page, half) => {
+  const frame = await box(page, "#frame");
+  const summary = await box(page, ".summary");
+  const cut = Math.round(summary.y + summary.height + frame.width * 0.012);
+  return half === "top"
+    ? { ...frame, height: cut - frame.y }
+    : { ...frame, y: cut, height: frame.y + frame.height - cut };
 };
 
 try {
@@ -110,9 +129,17 @@ try {
       await page.close();
     }
 
+    // Animations are captured smaller than the static images (Safari struggles to
+    // decode large animated WebP), and only the moving part of each page is animated.
+    if (want("activity")) {
+      const { page, errors } = await open("activity.html", theme);
+      await page.screenshot({ path: path.join(assets, `activity-top-${theme}.png`), clip: await split(page, "top"), omitBackground: true });
+      if (errors.length) throw new Error(`activity-top (${theme}): ${errors.join("; ")}`);
+      await page.close();
+    }
     for (const name of ["hero", "activity"].filter(want)) {
-      const { page, errors } = await open(`${name}.html`, theme);
-      const frame = await page.$("#frame");
+      const { page, errors } = await open(`${name}.html`, theme, ANIM_WIDTH);
+      const clip = name === "activity" ? await split(page, "bottom") : await box(page, "#frame");
       const dir = path.join(root, ".frames", `${name}-${theme}`);
       await rm(dir, { recursive: true, force: true });
       await mkdir(dir, { recursive: true });
@@ -120,7 +147,7 @@ try {
       for (let i = 0; i < FRAMES; i++) {
         await page.evaluate((t) => window.__frame(t), i / FRAMES);
         const file = path.join(dir, `${String(i).padStart(4, "0")}.png`);
-        await frame.screenshot({ path: file, omitBackground: true });
+        await page.screenshot({ path: file, clip, omitBackground: true });
         files.push(file);
       }
       if (errors.length) throw new Error(`${name} (${theme}): ${errors.join("; ")}`);

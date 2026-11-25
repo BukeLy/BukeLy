@@ -35,7 +35,7 @@ html:not(.capture) body {
 
 .frame {
   position: relative;
-  width: 1600px;
+  width: var(--frame-w, 1600px);
   container-type: inline-size;
 }
 html:not(.capture) .frame { width: min(1600px, 100%); margin: 0 auto; }
@@ -75,6 +75,9 @@ html:not(.capture) .frame { width: min(1600px, 100%); margin: 0 auto; }
   margin-right: 0.6cqw;
 }
 .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.015em; }
+/* Shown only in the README images: the image itself links to the live page. */
+html:not(.capture) .cta { display: none; }
+.cta { color: var(--accent); }
 .fig {
   font: 400 max(10px, 1.05cqw) / 1.5 var(--mono);
   letter-spacing: 0.08em;
