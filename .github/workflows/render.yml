@@ -1,0 +1,51 @@
+name: Render profile
+
+# Renders scene/ into the README images and publishes them, with the live
+# scene pages, to the `output` branch (force-pushed, so history stays small).
+# GitHub Pages serves that branch for the clickable 3D pages.
+on:
+  schedule:
+    - cron: "17 0 * * *" # daily, 00:17 UTC
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scene/**", "scripts/**", "package*.json", ".github/workflows/render.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: render
+  cancel-in-progress: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: sudo apt-get update -q && sudo apt-get install -yq webp
+      - name: Render
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npm run render
+      - name: Publish to the output branch
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir dist
+          cp -r scene/. dist/
+          cp assets/* dist/
+          touch dist/.nojekyll
+          cd dist
+          git init -q -b output
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -qm "Render $(date -u +%F)"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" output

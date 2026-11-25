@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node scripts/render.mjs",
+    "test": "node --test scripts/"
+  },
+  "devDependencies": {
+    "puppeteer-core": "25.17.0"
+  }
+}

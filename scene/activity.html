@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="data:," />
+<title>Bukely — Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  .frame { aspect-ratio: 1600 / 960; padding-top: 5.5cqw; }
+  .summary { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 2.6cqw; }
+  .total { display: flex; align-items: baseline; gap: 1.4cqw; }
+  .total .serif { font-size: 10.5cqw; line-height: 0.8; }
+  .total span:last-child { font-size: 1.75cqw; color: var(--ink-2); letter-spacing: -0.01em; }
+  .stats { display: flex; }
+  .stat { padding: 0 0 0.3cqw 2.2cqw; margin-left: 2.2cqw; border-left: 1px solid var(--line); min-width: 11cqw; }
+  .stat .serif { display: block; font-size: 3.6cqw; line-height: 1; margin-bottom: 0.7cqw; }
+  .stat .serif small { font-size: 0.5em; color: var(--ink-3); margin-left: 0.3em; }
+  .stage { left: 0; right: 0; top: 21cqw; bottom: 3.2cqw; }
+  .fig { position: absolute; left: 0; bottom: 0; margin: 0; }
+  .month { font: 400 max(9px, 1.05cqw) / 1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  /* Elbow leader: up from the bar top, then left to the label. CSS2D centres the
+     element on the anchor, so the anchor sits at (22cqw, 8cqw). */
+  .note { position: relative; width: 44cqw; height: 16cqw; }
+  .note .v { position: absolute; left: 22cqw; top: 6.2cqw; height: 1.8cqw; width: 1px; background: var(--accent); }
+  .note .h { position: absolute; left: 11cqw; top: 6.2cqw; width: 11cqw; height: 1px; background: var(--accent); }
+  .note .label { position: absolute; right: 34cqw; top: 6.2cqw; transform: translateY(-50%); padding-right: 1.2cqw; text-align: right; white-space: nowrap; }
+  .note .label .serif { display: block; font-size: max(18px, 3cqw); line-height: 1; margin-top: 0.5cqw; }
+  .tip {
+    position: fixed; pointer-events: none; padding: 8px 10px; border: 1px solid var(--line);
+    background: var(--page); font: 500 12px/1.4 var(--mono); letter-spacing: 0.04em;
+    opacity: 0; transform: translate(12px, -110%); transition: opacity 0.15s ease;
+  }
+  .tip b { display: block; font: 400 22px/1 var(--serif); letter-spacing: 0; margin-bottom: 2px; }
+  @media (max-width: 800px) {
+    .wide, .month.minor { display: none; }
+    .frame { aspect-ratio: auto; }
+    .summary { flex-direction: column; align-items: flex-start; gap: 6cqw; }
+    .total .serif { font-size: 22cqw; }
+    .total span:last-child { font-size: max(15px, 1.75cqw); }
+    .stat .serif { font-size: 7cqw; }
+    .stat:first-child { margin-left: 0; padding-left: 0; border-left: 0; }
+    .stage { position: relative; top: auto; bottom: auto; height: 80cqw; margin-top: 4cqw; }
+    .fig { position: static; }
+  }
+</style>
+<script type="importmap">
+  { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<main class="frame" id="frame">
+  <header class="head">
+    <span class="cap"><span class="dot"></span>02 — Activity</span>
+    <span class="cap dim">One block per day</span>
+    <span class="cap dim meta" id="updated"></span>
+  </header>
+  <section class="summary">
+    <div class="total"><span class="serif" id="total"></span><span>contributions<br />in the last twelve months</span></div>
+    <div class="stats">
+      <div class="stat"><span class="serif" id="streak"></span><span class="cap dim">Longest streak</span></div>
+      <div class="stat"><span class="serif" id="busiest"></span><span class="cap dim">Busiest month</span></div>
+    </div>
+  </section>
+  <div class="stage" id="stage"></div>
+  <p class="fig">Fig. 02 — Weeks run left to right, weekdays front to back. Height is contributions, log scale.</p>
+</main>
+<div class="tip" id="tip"></div>
+<script type="module">
+  import * as THREE from "three";
+  import { CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
+  import { start, palette, ACCENT, wave, capture } from "./common.js";
+
+  const data = await (await fetch("data.json", { cache: "no-store" })).json();
+  const fmt = (n) => n.toLocaleString("en-US");
+  const $ = (id) => document.getElementById(id);
+  const longDate = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+  $("total").textContent = fmt(data.total);
+  $("updated").innerHTML = `<span class="wide">Last 12 months · </span>Updated ${data.updated}`;
+  $("streak").innerHTML = `${data.longestStreak}<small>days</small>`;
+  $("busiest").innerHTML = `${data.busiest.label}<small>${fmt(data.busiest.count)}</small>`;
+
+  const days = data.weeks.flatMap((w, wi) => w.map((d) => ({ ...d, wi })));
+  const W = data.weeks.length;
+  const max = Math.max(...days.map((d) => d.count), 1);
+  const height = (c) => (c ? 0.3 + 7.2 * (Math.log1p(c) / Math.log1p(max)) ** 1.5 : 0.07);
+  const x = (wi) => wi - (W - 1) / 2;
+  const z = (wd) => wd - 3;
+  const bestIndex = days.findIndex((d) => d.date === data.bestDay.date);
+
+  await start({
+    stage: $("stage"),
+    fov: 13,
+    target: new THREE.Vector3(0, 0.8, 0),
+    cameraPath: (t, cam) => {
+      // Narrow screens: look along the diagonal so the year uses vertical space too.
+      const narrow = cam.aspect < 1.6;
+      const a = (narrow ? -0.95 : -0.42) + 0.16 * (wave(t) - 0.5);
+      const fit = narrow ? Math.max(1, 1.5 / cam.aspect) : Math.max(1, 2.5 / cam.aspect);
+      cam.position.set(Math.sin(a) * 100 * fit, 55 * fit, Math.cos(a) * 100 * fit);
+      cam.lookAt(0, 2.6, 0);
+    },
+    build: async ({ scene, camera, labels }) => {
+      const bars = new THREE.InstancedMesh(
+        new THREE.BoxGeometry(0.84, 1, 0.84).translate(0, 0.5, 0),
+        new THREE.MeshStandardMaterial({ roughness: 0.92 }),
+        days.length,
+      );
+      bars.castShadow = bars.receiveShadow = true;
+      const m = new THREE.Matrix4();
+      days.forEach((d, i) => {
+        bars.setMatrixAt(i, m.makeScale(1, height(d.count), 1).setPosition(x(d.wi), 0.16, z(d.weekday)));
+        bars.setColorAt(i, new THREE.Color(i === bestIndex ? ACCENT : palette.paper));
+      });
+      scene.add(bars);
+
+      const plinth = new THREE.Mesh(
+        new THREE.BoxGeometry(W + 1.2, 0.16, 8.2),
+        new THREE.MeshStandardMaterial({ color: palette.base, roughness: 0.95 }),
+      );
+      plinth.position.y = 0.08;
+      plinth.castShadow = plinth.receiveShadow = true;
+      scene.add(plinth);
+
+      data.months.forEach((mo, i) => {
+        const el = document.createElement("div");
+        el.className = `month${i % 3 ? " minor" : ""}`;
+        el.textContent = mo.label;
+        const o = new CSS2DObject(el);
+        o.position.set(x(mo.week) + 0.6, 0, 5.4);
+        scene.add(o);
+      });
+
+      const best = days[bestIndex];
+      const note = document.createElement("div");
+      note.className = "note";
+      note.innerHTML = `<div class="label"><span class="cap"><span class="dot"></span>Best day — ${longDate(best.date)}</span><span class="serif">${fmt(best.count)}</span></div><div class="h"></div><div class="v"></div>`;
+      const anchor = new CSS2DObject(note);
+      anchor.position.set(x(best.wi), 0.16 + height(best.count), z(best.weekday));
+      scene.add(anchor);
+
+      if (!capture) {
+        // Live page: rise in once, and a tooltip for any day under the pointer.
+        const born = performance.now();
+        const tip = $("tip");
+        const ray = new THREE.Raycaster();
+        const ndc = new THREE.Vector2();
+        labels.domElement.addEventListener("pointermove", (e) => {
+          const r = labels.domElement.getBoundingClientRect();
+          ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+          ray.setFromCamera(ndc, camera);
+          const hit = ray.intersectObject(bars)[0];
+          tip.style.opacity = hit ? 1 : 0;
+          if (!hit) return;
+          const d = days[hit.instanceId];
+          tip.innerHTML = `<b>${fmt(d.count)}</b>${longDate(d.date)}`;
+          tip.style.left = `${e.clientX}px`;
+          tip.style.top = `${e.clientY}px`;
+        });
+        labels.domElement.addEventListener("pointerleave", () => (tip.style.opacity = 0));
+        return () => {
+          const k = Math.min((performance.now() - born) / 1600, 1);
+          if (bars.userData.done) return;
+          days.forEach((d, i) => {
+            const e = 1 - (1 - Math.min(Math.max(k * 1.6 - d.wi / W * 0.6, 0), 1)) ** 3;
+            bars.setMatrixAt(i, m.makeScale(1, Math.max(height(d.count) * e, 0.01), 1).setPosition(x(d.wi), 0.16, z(d.weekday)));
+          });
+          bars.instanceMatrix.needsUpdate = true;
+          bars.userData.done = k === 1;
+        };
+      }
+      return () => {};
+    },
+  });
+</script>
+</body>
+</html>
