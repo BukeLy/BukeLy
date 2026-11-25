@@ -2,93 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" href="data:," />
-<title>Bukely — Focus &amp; Work</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=block" rel="stylesheet" />
-<link rel="stylesheet" href="style.css" />
-<style>
-  .frame + .frame { margin-top: 64px; }
-  /* Captured blocks carry their own breathing room so README spacing stays even. */
-  .block { padding: 5.5cqw 0 1cqw; }
-
-  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4cqw; padding-top: 2.6cqw; }
-  .col .n { color: var(--ink-3); }
-  .col h3 { font-size: 2.5cqw; font-weight: 500; letter-spacing: -0.025em; line-height: 1.1; margin: 1.1cqw 0 0.9cqw; }
-  .col p { font-size: 1.55cqw; line-height: 1.5; color: var(--ink-2); margin: 0; max-width: 30cqw; }
-
-  .row {
-    display: grid;
-    grid-template-columns: 7cqw 1fr 31cqw 17cqw;
-    align-items: center;
-    padding: 2.1cqw 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .row .i { align-self: start; padding-top: 0.5cqw; color: var(--ink-3); }
-  .row .owner { display: block; margin-bottom: 0.6cqw; }
-  .row .title { padding-right: 3cqw; }
-  .row .name { font-size: 3.9cqw; line-height: 0.95; }
-  .row .arrow { font: 400 2cqw/1 var(--sans); color: var(--ink-3); margin-left: 0.8cqw; vertical-align: 0.35em; }
-  .row .desc { font-size: 1.55cqw; line-height: 1.45; color: var(--ink-2); margin: 0; padding-right: 3cqw; }
-  .row .meta .cap { white-space: nowrap; }
-  .row .meta { text-align: right; display: flex; flex-direction: column; gap: 0.7cqw; align-items: flex-end; }
-  .row .stars { font-size: 2.4cqw; line-height: 1; }
-  .row .stars small { font: 500 max(10px, 1.1cqw)/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-left: 0.5em; }
-
-  @media (max-width: 800px) {
-    .cols { grid-template-columns: 1fr; }
-    .col h3 { font-size: 22px; }
-    .col p, .row .desc { font-size: 15px; max-width: none; }
-    .row { grid-template-columns: 1fr auto; gap: 8px 16px; }
-    .row .i { display: none; }
-    .row .name { font-size: 34px; }
-    .row .desc { grid-column: 1 / -1; grid-row: 2; }
-    .row .stars { font-size: 24px; }
-  }
-</style>
+<title>Bukely — sections</title>
+<link href="https://fonts.googleapis.com/css2?family=Jacquard+24&family=Jersey+10&family=Silkscreen&family=Pixelify+Sans&display=block" rel="stylesheet" />
+<style>html, body { margin: 0; background: transparent; } canvas { display: block; image-rendering: pixelated; }</style>
 </head>
 <body>
-<main>
-  <section class="frame block" id="focus">
-    <header class="head">
-      <span class="cap"><span class="dot"></span>01 — Focus</span>
-      <span class="cap dim">What I work on</span>
-    </header>
-    <div class="cols">
-      <div class="col"><span class="cap n">(a)</span><h3>Production systems</h3><p>PageIndex compute pipeline, multi-tenant AI APIs, reliability, and observability.</p></div>
-      <div class="col"><span class="cap n">(b)</span><h3>RAG &amp; document AI</h3><p>Reasoning-based retrieval, parser and OCR orchestration, and long-document indexing.</p></div>
-      <div class="col"><span class="cap n">(c)</span><h3>Open source &amp; agents</h3><p>LightRAG contributions, MCP-native tools, and serverless agent workflows.</p></div>
-    </div>
-  </section>
-
-  <section class="frame block" id="work-head">
-    <header class="head">
-      <span class="cap"><span class="dot"></span>03 — Selected work</span>
-      <span class="cap dim">Built and contributed to</span>
-      <span class="cap dim meta" id="count"></span>
-    </header>
-  </section>
-  <section class="frame" id="rows"></section>
-</main>
 <script type="module">
-  import "./theme.js";
+  import { FONT, W, SCALE, loadFonts, layer, text, rect, dotted, bits, paint } from "./bit.js";
+
   const data = await (await fetch("data.json", { cache: "no-store" })).json();
-  const fmt = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n));
-  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-  document.getElementById("count").textContent = `${data.repos.length} projects`;
-  document.getElementById("rows").innerHTML = data.repos
-    .map(
-      (r, i) => `<a class="row" id="row-${i}" href="${esc(r.url)}" style="color:inherit;text-decoration:none">
-        <span class="cap i">${String(i + 1).padStart(2, "0")}</span>
-        <div class="title"><span class="cap dim owner">${esc(r.owner)} /</span><span class="serif name">${esc(r.name)}</span><span class="arrow">↗</span></div>
-        <p class="desc">${esc(r.description)}</p>
-        <div class="meta"><span class="serif stars">${fmt(r.stars)}<small>stars</small></span><span class="cap dim">${esc(r.role)} · ${esc(r.language)}</span></div>
-      </a>`,
-    )
-    .join("");
-  await document.fonts.ready;
+  await loadFonts();
+
+  /** Greedy word wrap at a pixel width. */
+  const wrap = (g, str, size, font, width) => {
+    g.font = `${size}px ${font}`;
+    const lines = [""];
+    for (const word of str.split(" ")) {
+      const next = lines.at(-1) ? `${lines.at(-1)} ${word}` : word;
+      if (g.measureText(next).width > width && lines.at(-1)) lines.push(word);
+      else lines[lines.length - 1] = next;
+    }
+    return lines;
+  };
+  /** Section heading: an inverted band, like the hero's top bar. */
+  const band = (g, left, right) => {
+    rect(g, 0, 0, W, 10);
+    text(g, left, 3, 8, 8, FONT.label, { erase: true });
+    if (right) text(g, right, W - 3, 8, 8, FONT.label, { align: "right", erase: true });
+  };
+  const STAR = ["..#..", ".###.", "#####", ".###.", "#.#.#"];
+  const sprite = (g, rows, x, y) => rows.forEach((r, j) => [...r].forEach((c, i) => c === "#" && g.fillRect(x + i, y + j, 1, 1)));
+
+  /** Draw into a logical layer of height h, then output it as its own canvas. */
+  const emit = (id, h, draw) => {
+    const L = layer(W, h);
+    draw(L.g);
+    const c = document.createElement("canvas");
+    c.id = id;
+    document.body.appendChild(c);
+    paint(c, bits(L), W, h);
+    c.style.width = `${W * SCALE}px`;
+  };
+
+  // Focus: one row per area, title left, body right.
+  const focus = [
+    ["Production systems", "PageIndex compute pipeline, multi-tenant AI APIs, reliability and observability."],
+    ["RAG & document AI", "Reasoning-based retrieval, parser and OCR orchestration, long-document indexing."],
+    ["Open source & agents", "LightRAG contributions, MCP-native tools, serverless agent workflows."],
+  ];
+  const BODY_X = 188;
+  const probe = layer(W, 10).g;
+  const rows = focus.map(([title, body]) => ({ title, lines: wrap(probe, body, 12, FONT.body, W - BODY_X) }));
+  const rowH = (r) => Math.max(2, r.lines.length) * 13 + 10;
+  emit("focus", 20 + rows.reduce((s, r) => s + rowH(r), 0), (g) => {
+    band(g, "FOCUS", "WHAT I WORK ON");
+    let y = 14;
+    rows.forEach(({ title, lines }, i) => {
+      text(g, `${"ABC"[i]}.`, 0, y + 16, 8, FONT.label);
+      text(g, title, 14, y + 19, 20, FONT.num);
+      lines.forEach((ln, k) => text(g, ln, BODY_X, y + 16 + k * 13, 12, FONT.body));
+      y += rowH({ lines });
+      if (i < rows.length - 1) dotted(g, 0, y - 4, W);
+    });
+  });
+
+  emit("work", 14, (g) => band(g, "SELECTED WORK", "BUILT AND CONTRIBUTED TO"));
+
+  const k = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n));
+  data.repos.forEach((r, i) => {
+    const descLines = wrap(probe, r.description, 12, FONT.body, 262);
+    const h = 36 + descLines.length * 13;
+    emit(`work-${i}`, h, (g) => {
+      text(g, String(i + 1).padStart(2, "0"), 0, 12, 8, FONT.label);
+      text(g, `${r.owner.toUpperCase()} /`, 18, 12, 8, FONT.label);
+      text(g, r.name, 18, 31, 20, FONT.num);
+      descLines.forEach((ln, j) => text(g, ln, 18, 44 + j * 13, 12, FONT.body));
+      const sw = text(g, k(r.stars), W - 1, 31, 20, FONT.num, { align: "right" });
+      sprite(g, STAR, W - 1 - sw - 8, 21);
+      text(g, `${r.role} / ${r.language}`.toUpperCase(), W - 1, 44, 8, FONT.label, { align: "right" });
+      dotted(g, 0, h - 1, W);
+    });
+  });
+
   window.__ready = true;
 </script>
 </body>

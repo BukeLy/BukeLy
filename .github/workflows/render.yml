@@ -1,8 +1,7 @@
 name: Render profile
 
-# Renders scene/ into the README images and publishes them, with the live
-# scene pages, to the `output` branch (force-pushed, so history stays small).
-# GitHub Pages serves that branch for the clickable 3D pages.
+# Renders scene/ into the README images and publishes them to the `output`
+# branch (force-pushed, so history stays small).
 on:
   schedule:
     - cron: "17 0 * * *" # daily, 00:17 UTC
@@ -41,9 +40,7 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir dist
-          cp -r scene/. dist/
           cp assets/* dist/
-          touch dist/.nojekyll
           cd dist
           git init -q -b output
           git add -A
