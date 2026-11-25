@@ -6,7 +6,7 @@
 <picture>
   <source media="(max-width: 600px)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-mobile.webp" />
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-dark.webp" />
-  <img alt="Bukely, AI engineer in Kuala Lumpur. Now building document AI at PageIndex, agent tools over MCP, and WordLinea. GitHub contributions over the last year, shown as a dithered 3D skyline with one block per day." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-light.webp" width="846" />
+  <img alt="Bukely, AI researcher. Now building document AI at PageIndex, agent tools over MCP, and WordLinea. GitHub contributions over the last year, shown as a dithered 3D skyline with one block per day." src="https://raw.githubusercontent.com/BukeLy/BukeLy/output/hero-light.webp" width="846" />
 </picture>
 
 <picture>

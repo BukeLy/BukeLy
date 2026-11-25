@@ -66,8 +66,7 @@
   const A = win(g, A_BOX.x, A_BOX.y, A_BOX.w, A_BOX.h, "About Bukely");
   const ax = A.x + 16;
   text(g, "Bukely", ax - 2, A.y + 50, 44);
-  const tw = text(g, "AI engineer", ax, A.y + 80, 22);
-  text(g, "Kuala Lumpur", ax + tw + 10, A.y + 78);
+  text(g, "AI researcher", ax, A.y + 80, 22);
   dotted(g, A.x + 8, A.y + 96, A.w - 16);
   text(g, "Now building", ax, A.y + 116);
   tagline.forEach((s, i) => text(g, s, ax, A.y + tagY + i * 24, 22));
